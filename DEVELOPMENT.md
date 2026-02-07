@@ -771,6 +771,14 @@ Error: exceeded the maximal program log stack size
 
 ## 📊 提交历史（按功能模块）
 
+### Week 4 - 前端提交记录
+
+| 提交 | 描述 |
+|------|------|
+| [`d4e29e1`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/d4e29e1) | docs: add deployment guide for next session |
+| [`6fb39b0`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/6fb39b0) | docs: mark Week 4 frontend complete, deployment pending |
+| [`6342c2e`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/6342c2e) | feat: add Next.js frontend and integration tests |
+
 ### AMM 模块提交记录
 
 | 提交 | 描述 |
@@ -817,7 +825,9 @@ main (生产就绪)
 | Task 1-6 完成 | ✅ 已完成 |
 | AMM 模块 | ✅ 已完成 |
 | Lending 模块 | ✅ 已完成（简化版） |
-| 毕业设计 | 🔄 就绪 |
+| Week 4 前端 | ✅ 已完成 |
+| Devnet 部署 | ⏳ 待完成（等待空投） |
+| 毕业设计 | 🔄 90% 完成 |
 | 黑客松提交 | ⏳ 待提交 |
 
 ---

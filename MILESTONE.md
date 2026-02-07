@@ -282,13 +282,15 @@ solana account <ACCOUNT_ADDRESS> --output json
 - [x] GitHub repo 创建
 - [x] README.md 完整
 - [x] 代码能编译运行
-- [x] 测试用例完整（amm.ts 643行 + lending.ts 169行）
+- [x] 测试用例完整（amm.ts 692行 + lending.ts 218行）
+- [x] 前端 UI 完整（5个页面 + 3个组件）
 - [ ] Demo 视频（2-3 分钟）
 - [ ] finalProject/demo.md 填写
 - [ ] PR 提交到主仓库
+- [ ] Devnet 部署
 
 ---
 
-**预计总代码量：** ~1200 行（Rust + TypeScript）
+**预计总代码量：** ~3000 行（Rust + TypeScript + 测试）
 
 **祝开发顺利！** 🚀

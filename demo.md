@@ -35,17 +35,17 @@ https://github.com/truongvknnlthao-gif/solana-defi-amm-lending
 
 ### 功能截图
 
-![首页](./images/01-homepage.png)
-*首页 - 展示协议总览和模块入口*
+![首页 - 蓝色渐变 Hero 设计](./images/01-homepage.png)
+*首页 - 蓝色渐变 Hero 区域，展示 TVL、APY 等统计数据*
 
-![Swap 页面](./images/02-swap.png)
-*Swap 页面 - AMM 代币兑换界面*
+![Swap 页面 - 代币兑换界面](./images/02-swap.png)
+*Swap 页面 - AMM 代币兑换，支持 SOL/USDC 交易对*
 
-![Lending 页面](./images/03-lending.png)
-*Lending 页面 - 借贷协议界面*
+![Lending 页面 - 借贷协议界面](./images/03-lending.png)
+*Lending 页面 - 存款/借款功能，实时显示 APY 和额度*
 
-![GitHub 仓库](./images/04-github.png)
-*GitHub 仓库 - 项目代码和文档*
+![GitHub 仓库 - 项目代码](./images/04-github.png)
+*GitHub 仓库 - 完整的项目代码和文档*
 
 ## 💡 核心功能
 

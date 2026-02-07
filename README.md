@@ -244,10 +244,10 @@ anchor test tests/lending.ts
 - [x] 简化版（无清算）
 
 ### Week 4: ⏳ 前端 + 部署
-- [ ] Next.js 前端开发
-- [ ] 集成测试
-- [ ] Devnet 部署
-- [ ] README 完善
+- [x] Next.js 前端开发
+- [x] 集成测试
+- [ ] Devnet 部署 (等待空投)
+- [x] README 完善
 
 ---
 

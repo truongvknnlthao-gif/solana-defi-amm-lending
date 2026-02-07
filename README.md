@@ -1,8 +1,8 @@
-# Solana DeFi AMM Protocol
+# Solana DeFi AMM + Lending Protocol
 
 ## 🎓 毕业设计项目 - Solana Bootcamp 2026 S1
 
-> 组合型 DeFi 协议（AMM 模块）
+> 组合型 DeFi 协议（AMM + Lending）
 > GitHub: https://github.com/truongvknnlthao-gif/solana-defi-amm-lending
 
 ---
@@ -17,66 +17,48 @@
 
 ## 📊 项目状态
 
-### ✅ 已完成
+### ✅ 已完成模块
 
-| 模块 | 状态 | 说明 |
-|------|------|------|
-| AMM Initialize | ✅ 完成 | 初始化 AMM 资金池 |
-| AMM Swap | ✅ 完成 | Token 交换功能 |
-| AMM Add Liquidity | ✅ 完成 | 添加流动性 |
-| 构建成功 | ✅ 完成 | Program ID: `CZaKkKoLPHzcRXtm5q5X8YQNpr15ocASwgvW6krjFZex` |
+| 模块 | 状态 | Program ID | 说明 |
+|------|------|------------|------|
+| **AMM** | ✅ 完成 | `CZaKkKoLPHzcRXtm5q5X8YQNpr15ocASwgvW6krjFZex` | swap / add_liquidity / remove_liquidity / LP Token |
+| **Lending** | ✅ 完成 | `8oCbnRgZnWRd1ctY3otZvwGqJpr8fG7b2atYFxqUAjxC` | deposit / borrow / repay（简化版） |
 
-### ⏳ 开发中
-
-| 模块 | 状态 | 说明 |
-|------|------|------|
-| AMM Remove Liquidity | 🔄 待实现 | 移除流动性 |
-| LP Token 铸造 | 🔄 待实现 | 流动性凭证 |
-| Lending 模块 | ⏸️ 已禁用 | 需要单独修复 |
-| 前端 UI | ⏳ 待开始 | Next.js |
-| 集成测试 | ⏳ 待开始 | 测试用例 |
-
-### ⚠️ 已知问题
-
-- Lending 模块编译失败（临时禁用）
-- `initialize` 指令需要客户端单独创建 vault 账户
-- 有 `anchor-debug` cfg 警告（不影响功能）
-
----
-
-## 🛠️ 技术栈
-
-| 组件 | 版本 |
-|------|------|
-| Solana CLI | 4.0.0 (edge) |
-| SBF Toolchain | v1.53 |
-| Anchor | 0.30.1 |
-| Rust | 1.89.0-sbpf |
-| Node.js | 22.22.0 |
-
----
-
-## 📁 项目结构
+### 📁 项目结构
 
 ```
 solana-defi-amm-lending/
 ├── programs/
-│   └── amm/                    # AMM 智能合约
+│   ├── amm/                    # AMM 智能合约
+│   │   ├── src/
+│   │   │   ├── lib.rs         # 程序入口
+│   │   │   ├── state/mod.rs   # AmmPool 状态
+│   │   │   ├── math.rs        # AMM 数学计算
+│   │   │   └── errors.rs      # 错误定义
+│   │   └── Cargo.toml
+│   │
+│   └── lending/                # Lending 智能合约
 │       ├── src/
-│       │   ├── lib.rs         # 程序入口（含所有指令）
-│       │   ├── state.rs      # AmmPool 状态账户
-│       │   ├── math.rs       # AMM 数学计算
-│       │   └── errors.rs     # 错误定义
+│       │   ├── lib.rs         # 程序入口
+│       │   ├── state/mod.rs   # LendingPool / Obligation
+│       │   └── errors.rs      # 错误定义
 │       └── Cargo.toml
 │
-├── target/
-│   └── deploy/
-│       └── amm.so             # 编译后的程序
+├── tests/
+│   ├── amm.ts                 # AMM 单元测试 (643 行)
+│   └── lending.ts             # Lending 单元测试 (169 行)
+│
+├── app/                        # Next.js 前端 (待开发)
+│   ├── pages/
+│   ├── components/
+│   └── utils/
 │
 ├── Anchor.toml                 # Anchor 配置
-├── Cargo.toml                # Rust 工作区配置
-├── package.json
-└── tsconfig.json
+├── Cargo.toml                 # Rust 工作区配置
+├── DEVELOPMENT.md             # 完整开发指南
+├── MILESTONE.md              # 4 周开发计划
+├── README.md                 # 本文档
+└── package.json
 ```
 
 ---
@@ -118,55 +100,111 @@ CZaKkKoLPHzcRXtm5q5X8YQNpr15ocASwgvW6krjFZex
 
 ---
 
+## 🛠️ 技术栈
+
+| 组件 | 版本 |
+|------|------|
+| Solana CLI | 4.0.0 (Agave edge) |
+| SBF Toolchain | v1.53 |
+| Anchor | 0.32.1 |
+| Rust | 1.95.0-nightly |
+| Node.js | v22.22.0 |
+| TypeScript | 5.x |
+
+---
+
+## 🚀 快速开始
+
+### 环境要求
+
+```bash
+# 检查版本
+solana --version      # 4.0.0+
+anchor --version      # 0.32.1+
+rustc --version       # 1.95.0-nightly
+```
+
+### 构建项目
+
+```bash
+cd solana-defi-amm-lending
+
+# macOS PATH 配置
+export PATH="/Users/bypasser/.local/share/solana/install/active_release/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# 构建
+anchor build
+```
+
+### 构建产物
+
+| 模块 | 文件 | Program ID |
+|------|------|------------|
+| AMM | `target/deploy/amm.so` | `CZaKkKoLPHzcRXtm5q5X8YQNpr15ocASwgvW6krjFZex` |
+| Lending | `target/deploy/lending.so` | `8oCbnRgZnWRd1ctY3otZvwGqJpr8fG7b2atYFxqUAjxC` |
+
+---
+
 ## 📖 API 文档
 
-### initialize
+### AMM 模块
+
+#### initialize
 
 初始化 AMM 资金池。
 
-**指令参数：**
-- `seed: u64` - 池子种子
-- `fee: u16` - 交易手续费 (例如: 30 = 0.3%)
-- `bump: u8` - PDA bump
+**参数：** `seed: u64`, `fee: u16`, `bump: u8`
 
-**账户：**
-- `authority` - 池子所有者
-- `amm_pool` - AMM 池子账户
-- `token_a_mint` - Token A Mint
-- `token_b_mint` - Token B Mint
-- `token_a_vault` - Token A Vault
-- `token_b_vault` - Token B Vault
-- `system_program` - 系统程序
+#### swap
 
-### swap
+Token 交换。
 
-在 AMM 池子中交换 Token。
+**参数：** `amount_in: u64`, `minimum_amount_out: u64`
 
-**指令参数：**
-- `amount_in: u64` - 输入数量
-- `minimum_amount_out: u64` - 最小输出数量（滑点保护）
+#### add_liquidity
 
-**账户：**
-- `user` - 用户
-- `amm_pool` - AMM 池子
-- `user_token_a/b` - 用户 Token 账户
-- `token_a/b_vault` - 池子 Vault
-- `token_program` - Token 程序
+添加流动性。
 
-### add_liquidity
+**参数：** `amount_a: u64`, `amount_b: u64`
 
-向 AMM 池子添加流动性。
+#### remove_liquidity
 
-**指令参数：**
-- `amount_a: u64` - Token A 数量
-- `amount_b: u64` - Token B 数量
+移除流动性。
 
-**账户：**
-- `provider` - 流动性提供者
-- `amm_pool` - AMM 池子
-- `provider_token_a/b` - 提供者 Token 账户
-- `token_a/b_vault` - 池子 Vault
-- `token_program` - Token 程序
+**参数：** `lp_amount: u64`
+
+### Lending 模块（简化版）
+
+#### initialize
+
+初始化借贷池。
+
+**参数：** `bump: u8`
+
+#### initObligation
+
+初始化用户的借款义务账户。
+
+**参数：** 无
+
+#### deposit
+
+存入抵押品。
+
+**参数：** `amount: u64`
+
+#### borrow
+
+借款。
+
+**参数：** `amount: u64`
+
+#### repay
+
+还款。
+
+**参数：** `amount: u64`
 
 ---
 
@@ -176,65 +214,40 @@ CZaKkKoLPHzcRXtm5q5X8YQNpr15ocASwgvW6krjFZex
 # 启动本地测试网络
 solana-test-validator
 
-# 运行测试（需要先编写测试文件）
+# 运行所有测试
 anchor test
+
+# AMM 测试
+anchor test tests/amm.ts
+
+# Lending 测试
+anchor test tests/lending.ts
 ```
 
 ---
 
 ## 📅 开发计划
 
-### Week 1: ✅ 已完成
+### Week 1: ✅ 基础架构
 - [x] 项目初始化
-- [x] AMM 核心逻辑
-- [x] 构建成功
+- [x] Anchor 配置
 
-### Week 2: 🔄 进行中
-- [ ] Remove Liquidity
-- [ ] LP Token 铸造
-- [ ] 单元测试
+### Week 2: ✅ AMM 核心
+- [x] swap 指令
+- [x] add/remove liquidity
+- [x] LP Token 铸造
+- [x] 单元测试
 
-### Week 3: ⏳ 待开始
-- [ ] 修复 Lending 模块
-- [ ] 借贷核心功能
+### Week 3: ✅ Lending 核心
+- [x] initialize / initObligation
+- [x] deposit / borrow / repay
+- [x] 简化版（无清算）
 
-### Week 4: ⏳ 待开始
-- [ ] 前端 UI
+### Week 4: ⏳ 前端 + 部署
+- [ ] Next.js 前端开发
 - [ ] 集成测试
-- [ ] 部署文档
-
----
-
-## 🔧 常见问题
-
-### Q1: 构建失败 "frame size too large"
-
-**问题：** 帧空间超出限制（>4096 字节）
-
-**解决：**
-- 简化 Initialize 结构体
-- 移除不必要的账户验证
-- 使用 `UncheckedAccount` 替代 `Account`
-
-### Q2: Anchor 版本不匹配
-
-**问题：** CLI 0.32.1 vs 代码 0.30.1
-
-**解决：**
-```toml
-# 在 Anchor.toml 中添加
-[toolchain]
-anchor_version = "0.30.1"
-```
-
-### Q3: `cargo-build-sbf` 找不到
-
-**问题：** Solana SDK 路径错误
-
-**解决：**
-```bash
-export PATH="/Users/bypasser/.local/share/solana/install/active_release/bin:$PATH"
-```
+- [ ] Devnet 部署
+- [ ] README 完善
 
 ---
 
@@ -250,16 +263,17 @@ export PATH="/Users/bypasser/.local/share/solana/install/active_release/bin:$PAT
 
 ### DeFi 参考
 - [Uniswap V2](https://docs.uniswap.org/protocol/V2)
-- [Solana AMM Tutorial](https://www.soldev.co/course/solana-amm)
+- [Aave Protocol](https://aave.com/)
 
 ---
 
 ## 📝 更新日志
 
 ### 2026-02-07
-- ✅ 完成 AMM 核心模块
-- ✅ 成功构建
-- ⚠️ 禁用 Lending 模块（需要修复）
+- ✅ AMM 模块完整实现
+- ✅ Lending 模块实现（简化版）
+- ✅ 两个模块构建成功
+- ✅ 服务器环境验证通过
 
 ---
 

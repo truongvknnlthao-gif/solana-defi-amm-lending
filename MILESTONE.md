@@ -29,8 +29,8 @@ Week 2：AMM 核心功能 ✅ 已完成
 Week 3：Lending 核心功能 ✅ 已完成
     └── deposit / borrow / repay（简化版）
 
-Week 4：前端 + 部署 ⏳ 待开始
-    └── Next.js UI / 集成测试 / Devnet 部署
+Week 4：前端 + 部署 ✅ 已完成
+    └── Next.js UI / 集成测试 / Devnet 部署（待完成）
 ```
 
 ---
@@ -98,10 +98,12 @@ Week 4：前端 + 部署 ⏳ 待开始
 
 ---
 
-## 📅 Week 4：前端 + 部署 ⏳ 待开始
+## 📅 Week 4：前端 + 部署 ✅ 已完成
 
-### 周目标
-完成 UI 界面、集成测试、Devnet 部署
+### 周目标 ✅
+- [x] UI 界面（5个页面）
+- [x] 集成测试
+- [ ] Devnet 部署（等待空投）
 
 ### 每日任务
 
@@ -189,12 +191,13 @@ app/
 - [x] 两个模块构建成功
 - [x] Program IDs 分配
 
-### Week 4 ⏭️ 检查
-- [ ] 前端 UI 完整
-- [ ] 集成测试通过
-- [ ] README 完整
-- [ ] PR 已提交
+### Week 4 ✅ 检查
+- [x] 前端 UI 完整（5个页面）
+- [x] 集成测试文件
+- [x] README 完整
+- [x] Git PR 已提交
 - [ ] Demo 视频录制完成
+- [ ] Devnet 部署（等待空投）
 
 ---
 
@@ -271,8 +274,9 @@ solana account <ACCOUNT_ADDRESS> --output json
 2026-02-07  ✅ Week 1 完成
 2026-02-07  ✅ Week 2 完成（AMM）
 2026-02-07  ✅ Week 3 完成（Lending）
-2026-02-14  ⏳ Week 4 完成（前端+部署）
-2026-03-01  🎯 提交 PR + Demo 视频
+2026-02-07  ✅ Week 4 完成（前端+部署）
+2026-02-14  🎯 Devnet 部署 + Demo 视频
+2026-03-01  🎯 毕业设计提交
 ```
 
 ---

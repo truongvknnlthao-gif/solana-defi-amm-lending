@@ -77,24 +77,22 @@ yarn --version   # 需要 v1.22+
 
 ### 关键版本信息
 
-| 组件 | 版本 | 说明 |
-|------|------|------|
-| Solana CLI | 4.0.0 (edge) | 必须使用 edge 获取最新 SBF 工具链 |
-| SBF Toolchain | v1.53 | 支持 Rust edition2024 |
-| Anchor | 0.30.1 | 与 Solana SDK 兼容版本 |
-| Rust | 1.89.0-sbpf | Solana 定制版 |
-| Node.js | 22.22.0 | 当前 LTS |
-| Yarn | 1.22.22 | 包管理器 |
+| 组件 | macOS | 服务器 | 说明 |
+|------|-------|--------|------|
+| Solana CLI | 4.0.0 (Agave) | 4.0.0 (Agave) | edge 版本 |
+| SBF Toolchain | v1.53 | v1.53 | 支持 Rust edition2024 |
+| Anchor | 0.32.1 | 0.32.1 | 与 Solana SDK 兼容 |
+| Rust | 1.95.0-nightly | 1.95.0-nightly | Solana 定制版 |
+| Node.js | v22.22.0 | v22.22.0 | 当前 LTS |
+| Yarn | 1.22.22 | 1.22.22 | 包管理器 |
 
-### macOS 特殊配置
+### macOS PATH 配置
 
 ```bash
-# 安装 libusb（solana-test-validator 依赖）
-brew install libusb
-
-# 配置 PATH
-# 添加到 ~/.zshrc 或 ~/.bashrc
+# Solana CLI (agave-install)
 export PATH="/Users/bypasser/.local/share/solana/install/active_release/bin:$PATH"
+
+# Rust/Cargo
 export PATH="$HOME/.cargo/bin:$PATH"
 ```
 
@@ -670,6 +668,44 @@ Error: exceeded the maximal program log stack size
 
 ---
 
+## 📋 项目规划 (2026-02-07)
+
+### 当前状态
+
+| 模块 | 状态 | 说明 |
+|------|------|------|
+| AMM initialize | ✅ 完成 | 池初始化 |
+| AMM swap | ⚠️ 待修复 | 需要更新 reserves |
+| AMM add_liquidity | ⚠️ 待完善 | 缺少 LP Token 铸造 |
+| AMM remove_liquidity | 🔲 待实现 | |
+| LP Token | 🔲 待实现 | SPL Token Mint |
+| Lending | 🔲 待修复 | 帧空间溢出 5312 > 4096 |
+| 单元测试 | 🔲 待编写 | |
+
+### AMM 代码问题清单
+
+| 位置 | 问题 | 优先级 |
+|------|------|--------|
+| `swap` 指令 | 只做了 token transfer，没更新 reserves | P0 |
+| `add_liquidity` | 没实现 LP Token 铸造逻辑 | P1 |
+| `remove_liquidity` | 还没实现 | P2 |
+
+### 后续开发计划
+
+#### Phase 1: AMM 完善
+1. **修复 swap 指令** - 更新 reserves + 验证 vault 余额
+2. **实现 LP Token** - Mint/Burn LP Token
+3. **实现 remove_liquidity** - 提取流动性 + burn LP
+4. **编写单元测试**
+
+#### Phase 2: Lending 修复
+1. **简化账户结构** - 解决帧空间溢出
+2. **修复模块导入** - 循环引用问题
+3. **实现核心功能** - Deposit/Borrow/Repay
+4. **添加清算机制**
+
+---
+
 ## 📋 未来待办
 
 ### 短期 (Week 2)
@@ -752,6 +788,19 @@ Error: exceeded the maximal program log stack size
 ---
 
 ## 📝 更新日志
+
+### 2026-02-07 版本更新
+
+**代码优化：**
+- ✅ Anchor 0.30.1 → **0.32.1**
+- ✅ Solana SDK 1.18.0 → **4.0.0**
+- ✅ 统一 macOS 和服务器环境
+
+**环境验证：**
+- ✅ Rust 1.95.0-nightly (统一)
+- ✅ Solana CLI 4.0.0 Agave (统一)
+- ✅ Anchor 0.32.1 (统一)
+- ⚠️ Lending 模块禁用（帧空间问题待解决）
 
 ### 2026-02-07
 

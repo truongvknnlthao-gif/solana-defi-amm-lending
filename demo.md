@@ -47,5 +47,5 @@ https://github.com/truongvknnlthao-gif/solana-defi-amm-lending
 ## ✍️ 项目创作者
 
 1. 创作者昵称：BY
-2. 创作者联系方式：Telegram @truongvknnlthao-gif
+2. 创作者联系方式：[Telegram @HeyWhiteBY](https://t.me/HeyWhiteBY)
 3. 创作者 Solana USDC 钱包地址：9iL8XQHHQmtWojmFHsMj9cTZtMhSShwrX72TDDTGt9gy

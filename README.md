@@ -45,10 +45,10 @@ solana-defi-amm-lending/
 │       └── Cargo.toml
 │
 ├── tests/
-│   ├── amm.ts                 # AMM 单元测试 (643 行)
-│   └── lending.ts             # Lending 单元测试 (169 行)
+│   ├── amm.ts                 # AMM 单元测试 (692 行)
+│   └── lending.ts             # Lending 单元测试 (218 行)
 │
-├── app/                        # Next.js 前端 (待开发)
+├── app/                        # Next.js 前端 ⏳ Week 4 开发
 │   ├── pages/
 │   ├── components/
 │   └── utils/
@@ -69,9 +69,9 @@ solana-defi-amm-lending/
 
 ```bash
 # 检查版本
-solana --version      # 需要 4.0.0+
-anchor --version     # 需要 0.30.1+
-rustc --version       # 需要 nightly-sbpf
+solana --version      # 4.0.0+
+anchor --version      # 0.32.1+
+rustc --version       # 1.95.0-nightly
 ```
 
 ### 构建项目

@@ -775,13 +775,25 @@ Error: exceeded the maximal program log stack size
 
 | 提交 | 描述 |
 |------|------|
+| [`6405cdd`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/6405cdd) | feat: add YouTube video link |
+| [`a0dbbd7`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/a0dbbd7) | feat: add demo video |
+| [`c3998cb`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/c3998cb) | fix: update GitHub screenshot - capture correct repository page |
+| [`5b1bad7`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/5b1bad7) | chore: update screenshots - full page capture |
+| [`8a1a742`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/8a1a742) | feat: update demo.md with new design screenshots |
+| [`74d54af`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/74d54af) | feat: apply design system to frontend |
 | [`61c54dd`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/61c54dd) | fix: update MILESTONE.md - mark Week 4 complete |
 | [`bff549d`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/bff549d) | docs: update project progress - Week 4 complete |
 | [`d4e29e1`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/d4e29e1) | docs: add deployment guide for next session |
 | [`6fb39b0`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/6fb39b0) | docs: mark Week 4 frontend complete |
 | [`6342c2e`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/6342c2e) | feat: add Next.js frontend and integration tests |
 
-### AMM 模块
+### Week 3 - Lending 模块
+
+| 提交 | 描述 |
+|------|------|
+| [`8395aca`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/8395aca) | feat: implement simplified Lending module |
+
+### Week 2 - AMM 模块
 
 | 提交 | 描述 |
 |------|------|
@@ -790,16 +802,13 @@ Error: exceeded the maximal program log stack size
 | [`4b30063`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/4b30063) | feat: 清理临时文件 |
 | [`5245b16`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/5245b16) | feat: 初始化项目结构 |
 
-### Lending 模块
-
-| 提交 | 描述 |
-|------|------|
-| [`8395aca`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/8395aca) | feat: implement simplified Lending module |
-
 ### 环境与配置
 
 | 提交 | 描述 |
 |------|------|
+| [`ecfcaf3`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/ecfcaf3) | feat: update Telegram contact to @HeyWhiteBY |
+| [`c30dfba`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/c30dfba) | feat: update contact to Telegram |
+| [`3fd18b8`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/3fd18b8) | feat: add demo.md for graduation project submission |
 | [`bfa5476`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/bfa5476) | fix: resolve all version and configuration issues |
 | [`78667f3`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/78667f3) | chore: update environment to Anchor 0.32.1 + Solana 4.0.0 |
 | [`458da51`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/458da51) | chore: update Program IDs for server deployment |

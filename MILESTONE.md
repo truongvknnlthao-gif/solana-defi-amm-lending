@@ -275,23 +275,27 @@ solana account <ACCOUNT_ADDRESS> --output json
 2026-02-07  ✅ Week 2 完成（AMM）
 2026-02-07  ✅ Week 3 完成（Lending）
 2026-02-07  ✅ Week 4 完成（前端+部署）
-2026-02-14  🎯 Devnet 部署 + Demo 视频
-2026-03-01  🎯 毕业设计提交
+2026-02-07  ✅ Demo 视频录制（YouTube: s9E3Z4E9DEU）
+2026-02-07  ✅ demo.md 填写完成
+⏳  PR 提交到 bootcamp 仓库
+⏳  毕业问卷填写
 ```
 
 ---
 
 ## 🎓 毕业设计检查清单
 
-- [x] GitHub repo 创建
+- [x] GitHub repo 创建（公开）
 - [x] README.md 完整
 - [x] 代码能编译运行
-- [x] 测试用例完整（amm.ts 692行 + lending.ts 218行）
+- [x] 测试用例完整（amm.ts 692行 + lending.ts 218行 + integration.ts 254行）
 - [x] 前端 UI 完整（5个页面 + 3个组件）
-- [ ] Demo 视频（2-3 分钟）
-- [ ] finalProject/demo.md 填写
-- [ ] PR 提交到主仓库
-- [ ] Devnet 部署
+- [x] demo.md 填写完成
+- [x] Demo 视频（YouTube: s9E3Z4E9DEU）
+- [x] 设计系统应用（Trust Blue + Action Orange）
+- [x] 功能截图（4张）
+- [ ] finalProject PR 提交
+- [ ] 毕业问卷填写
 
 ---
 

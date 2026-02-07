@@ -46,18 +46,39 @@ solana-defi-amm-lending/
 │
 ├── tests/
 │   ├── amm.ts                 # AMM 单元测试 (692 行)
-│   └── lending.ts             # Lending 单元测试 (218 行)
+│   ├── lending.ts             # Lending 单元测试 (218 行)
+│   └── integration.ts         # 集成测试 (254 行)
 │
-├── app/                        # Next.js 前端 ⏳ Week 4 开发
-│   ├── pages/
-│   ├── components/
-│   └── utils/
+├── pages/                      # Next.js 前端页面
+│   ├── _app.tsx              # App 入口
+│   ├── _document.tsx         # HTML 文档
+│   ├── index.tsx             # 首页
+│   ├── swap.tsx             # Swap 页面
+│   └── lending.tsx          # Lending 页面
+│
+├── components/                 # React 组件
+│   ├── WalletButton.tsx     # 钱包连接按钮
+│   ├── SwapForm.tsx         # Swap 表单
+│   └── LendingForm.tsx      # Lending 表单
+│
+├── utils/                     # 工具函数
+│   ├── constants.ts         # 常量定义
+│   └── program.ts           # Anchor 程序配置
+│
+├── styles/                    # CSS 样式
+│   └── globals.css          # 全局样式（设计系统）
+│
+├── images/                    # 截图
+│   ├── 01-homepage.png
+│   ├── 02-swap.png
+│   ├── 03-lending.png
+│   └── 04-github.png
 │
 ├── Anchor.toml                 # Anchor 配置
 ├── Cargo.toml                 # Rust 工作区配置
-├── DEVELOPMENT.md             # 完整开发指南
+├── DEVELOPMENT.md              # 完整开发指南
 ├── MILESTONE.md              # 4 周开发计划
-├── README.md                 # 本文档
+├── demo.md                   # 毕业设计提交模板
 └── package.json
 ```
 

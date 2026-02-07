@@ -30,7 +30,7 @@ https://github.com/truongvknnlthao-gif/solana-defi-amm-lending
 ## 🎬 Demo 演示
 
 ### 演示链接
-- 🎥 视频演示：[demo.mp4](./video/demo.mp4) (10MB, 约1分钟)
+- 🎥 视频演示：[YouTube](https://youtu.be/s9E3Z4E9DEU) (1分钟)
 - 🌐 在线 Demo：本地测试网 (localhost:3000)
 
 ### 视频内容

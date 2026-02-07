@@ -1,0 +1,33 @@
+{
+  "name": "solana-defi-amm-lending",
+  "version": "0.1.0",
+  "description": "Solana AMM + Lending DeFi Protocol - Graduation Project",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.91.0",
+    "@solana/spl-token": "^0.4.0",
+    "@solana/wallet-adapter-react": "^0.15.35",
+    "@solana/wallet-adapter-react-ui": "^0.9.35",
+    "@solana/wallet-adapter-wallets": "^0.19.32",
+    "@solana/wallet-adapter-base": "^0.9.23",
+    "next": "14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "anchor": "^0.30.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.3.0",
+    "ts-mocha": "^10.0.0",
+    "@types/chai": "^4.3.0",
+    "chai": "^4.3.0"
+  }
+}

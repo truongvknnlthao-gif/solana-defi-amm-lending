@@ -1,0 +1,9 @@
+[workspace]
+members = ["programs/amm", "programs/lending"]
+
+[toolchain]
+channel = "1.75.0"
+
+[profile.release]
+overflow-checks = true
+lto = "thin"

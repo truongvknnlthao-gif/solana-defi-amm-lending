@@ -1,8 +1,7 @@
 [workspace]
-members = ["programs/amm", "programs/lending"]
-
-[toolchain]
-channel = "1.75.0"
+members = ["programs/amm"]
+exclude = ["programs/lending_disabled"]
+resolver = "2"
 
 [profile.release]
 overflow-checks = true

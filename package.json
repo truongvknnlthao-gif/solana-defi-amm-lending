@@ -10,6 +10,7 @@
     "test": "ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
   },
   "dependencies": {
+    "@coral-xyz/anchor": "^0.29.0",
     "@solana/web3.js": "^1.91.0",
     "@solana/spl-token": "^0.4.0",
     "@solana/wallet-adapter-react": "^0.15.35",
@@ -18,8 +19,7 @@
     "@solana/wallet-adapter-base": "^0.9.23",
     "next": "14.1.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "anchor": "^0.32.1"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

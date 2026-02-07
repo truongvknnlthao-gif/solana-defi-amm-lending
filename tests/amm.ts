@@ -17,7 +17,8 @@ import {
   createAssociatedTokenAccount,
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
-  TokenAccountNotFoundError
+  getMint,
+  getAccount
 } from '@solana/spl-token';
 import { assert } from 'chai';
 
@@ -35,12 +36,12 @@ describe('AMM Tests', () => {
   
   let authorityTokenA = null;
   let authorityTokenB = null;
+  let authorityLpToken = null;
   
   // Pool PDA
   let poolPda = null;
   let poolTokenA = null;
   let poolTokenB = null;
-  let poolLpToken = null;
 
   const FEE_RATE = 3; // 0.3%
   const SEED = 12345;
@@ -71,6 +72,16 @@ describe('AMM Tests', () => {
       9
     );
 
+    // ✅ Create LP Token Mint (with pool as mint authority)
+    lpMint = await createMint(
+      provider.connection,
+      authority,
+      authority.publicKey,  // initial mint authority
+      null,   // no freeze authority
+      9  // decimals
+    );
+    console.log('LP Token Mint:', lpMint.toString());
+
     // Get ATA for authority
     authorityTokenA = await getOrCreateAssociatedTokenAccount(
       provider.connection,
@@ -85,6 +96,15 @@ describe('AMM Tests', () => {
       tokenB,
       authority.publicKey
     );
+
+    // ✅ Get ATA for LP tokens
+    authorityLpToken = await getOrCreateAssociatedTokenAccount(
+      provider.connection,
+      authority,
+      lpMint,
+      authority.publicKey
+    );
+    console.log('Authority LP Token:', authorityLpToken.address.toString());
 
     // Mint tokens to authority
     await mintTo(
@@ -127,7 +147,7 @@ describe('AMM Tests', () => {
 
       console.log('Pool PDA:', poolPda.toString());
 
-      // Derive token accounts
+      // Derive token accounts (vaults)
       const [poolTokenAKey] = await PublicKey.findProgramAddress(
         [Buffer.from('pool_token_a'), poolPda.toBuffer()],
         program.programId
@@ -140,23 +160,16 @@ describe('AMM Tests', () => {
       );
       poolTokenB = poolTokenBKey;
 
-      const [poolLpTokenKey] = await PublicKey.findProgramAddress(
-        [Buffer.from('pool_lp_token'), poolPda.toBuffer()],
-        program.programId
-      );
-      poolLpToken = poolLpTokenKey;
-
       try {
         await program.methods
-          .initialize(new anchor.BN(SEED), FEE_RATE)
+          .initialize(new anchor.BN(SEED), FEE_RATE, bump)
           .accounts({
             authority: authority.publicKey,
             tokenA: tokenA,
             tokenB: tokenB,
-            pool: poolPda,
-            poolTokenA: poolTokenA,
-            poolTokenB: poolTokenB,
-            poolLpToken: poolLpToken,
+            tokenAVault: poolTokenA,
+            tokenBVault: poolTokenB,
+            lpTokenMint: lpMint,  // ✅ LP Token Mint address
             systemProgram: SystemProgram.programId,
             tokenProgram: TOKEN_PROGRAM_ID,
             associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -166,6 +179,11 @@ describe('AMM Tests', () => {
           .rpc();
 
         console.log('Pool initialized successfully');
+        console.log('Pool LP Token Mint:', lpMint.toString());
+        
+        // Verify LP Mint supply is 0
+        const lpMintInfo = await getMint(provider.connection, lpMint);
+        assert.equal(lpMintInfo.supply, 0n, 'LP Mint supply should be 0');
       } catch (e) {
         console.error('Initialize error:', e);
         throw e;
@@ -174,29 +192,50 @@ describe('AMM Tests', () => {
   });
 
   describe('Add Liquidity', () => {
-    it('Add initial liquidity', async () => {
+    it('Add initial liquidity and receive LP tokens', async () => {
       const amountA = new anchor.BN(100000000); // 100 million
       const amountB = new anchor.BN(50000000);  // 50 million
 
       try {
+        // Get LP token balance before
+        const lpBalanceBefore = await getAccount(provider.connection, authorityLpToken.address);
+        console.log('LP Balance Before:', lpBalanceBefore.amount.toString());
+
         await program.methods
           .addLiquidity(amountA, amountB)
           .accounts({
-            authority: authority.publicKey,
-            tokenA: tokenA,
-            tokenB: tokenB,
-            pool: poolPda,
-            poolTokenA: poolTokenA,
-            poolTokenB: poolTokenB,
-            poolLpToken: poolLpToken,
-            authorityTokenA: authorityTokenA.address,
-            authorityTokenB: authorityTokenB.address,
+            provider: authority.publicKey,
+            providerTokenA: authorityTokenA.address,
+            providerTokenB: authorityTokenB.address,
+            providerLpToken: authorityLpToken.address,
+            tokenAVault: poolTokenA,
+            tokenBVault: poolTokenB,
+            lpTokenMint: lpMint,
             tokenProgram: TOKEN_PROGRAM_ID,
+            tokenAMint: tokenA,
+            tokenBMint: tokenB,
           })
           .signers([authority])
           .rpc();
 
         console.log('Initial liquidity added');
+        
+        // ✅ Verify LP tokens were minted
+        const lpBalanceAfter = await getAccount(provider.connection, authorityLpToken.address);
+        console.log('LP Balance After:', lpBalanceAfter.amount.toString());
+        
+        assert(lpBalanceAfter.amount > 0n, 'Should receive LP tokens');
+        
+        // Verify pool reserves updated
+        const poolAccount = await program.account.ammPool.fetch(poolPda);
+        console.log('Pool Reserve A:', poolAccount.reserveA.toString());
+        console.log('Pool Reserve B:', poolAccount.reserveB.toString());
+        console.log('LP Supply:', poolAccount.lpTokenSupply.toString());
+        
+        assert.equal(poolAccount.reserveA.toString(), amountA.toString());
+        assert.equal(poolAccount.reserveB.toString(), amountB.toString());
+        assert(poolAccount.lpTokenSupply > 0);
+        
       } catch (e) {
         console.error('Add liquidity error:', e);
         throw e;
@@ -204,29 +243,51 @@ describe('AMM Tests', () => {
     });
 
     it('Add more liquidity proportionally', async () => {
-      // Add more liquidity in same proportion
+      // Add more liquidity in same proportion (2:1)
       const amountA = new anchor.BN(50000000); // 50 million
       const amountB = new anchor.BN(25000000); // 25 million
+      
+      // Get current state
+      const poolBefore = await program.account.ammPool.fetch(poolPda);
+      const lpSupplyBefore = poolBefore.lpTokenSupply;
+      const reserveABefore = poolBefore.reserveA;
+      const reserveBBefore = poolBefore.reserveB;
+      
+      const lpBalanceBefore = await getAccount(provider.connection, authorityLpToken.address);
+      const lpBalanceBeforeNum = lpBalanceBefore.amount;
 
       try {
         await program.methods
           .addLiquidity(amountA, amountB)
           .accounts({
-            authority: authority.publicKey,
-            tokenA: tokenA,
-            tokenB: tokenB,
-            pool: poolPda,
-            poolTokenA: poolTokenA,
-            poolTokenB: poolTokenB,
-            poolLpToken: poolLpToken,
-            authorityTokenA: authorityTokenA.address,
-            authorityTokenB: authorityTokenB.address,
+            provider: authority.publicKey,
+            providerTokenA: authorityTokenA.address,
+            providerTokenB: authorityTokenB.address,
+            providerLpToken: authorityLpToken.address,
+            tokenAVault: poolTokenA,
+            tokenBVault: poolTokenB,
+            lpTokenMint: lpMint,
             tokenProgram: TOKEN_PROGRAM_ID,
+            tokenAMint: tokenA,
+            tokenBMint: tokenB,
           })
           .signers([authority])
           .rpc();
 
         console.log('Additional liquidity added');
+        
+        // ✅ Verify LP tokens were minted proportionally
+        const lpBalanceAfter = await getAccount(provider.connection, authorityLpToken.address);
+        const lpMinted = lpBalanceAfter.amount - lpBalanceBeforeNum;
+        console.log('LP Tokens minted:', lpMinted.toString());
+        
+        assert(lpMinted > 0n, 'Should receive LP tokens');
+        
+        // Verify reserves updated
+        const poolAfter = await program.account.ammPool.fetch(poolPda);
+        assert.equal(poolAfter.reserveA.toString(), (reserveABefore + amountA.toNumber()).toString());
+        assert.equal(poolAfter.reserveB.toString(), (reserveBBefore + amountB.toNumber()).toString());
+        
       } catch (e) {
         console.error('Add liquidity error:', e);
         throw e;
@@ -235,7 +296,7 @@ describe('AMM Tests', () => {
   });
 
   describe('Swap', () => {
-    it('Swap TokenA for TokenB', async () => {
+    it('Swap TokenA for TokenB and verify reserves update', async () => {
       const user = Keypair.generate();
       
       // Airdrop to user
@@ -270,6 +331,12 @@ describe('AMM Tests', () => {
         10000000 // 10 million
       );
 
+      // Get pool state before swap
+      const poolBefore = await program.account.ammPool.fetch(poolPda);
+      const reserveABefore = poolBefore.reserveA;
+      const reserveBBefore = poolBefore.reserveB;
+      console.log('Pool Before Swap - A:', reserveABefore, 'B:', reserveBBefore);
+
       const amountIn = new anchor.BN(1000000); // 1 million
       const minAmountOut = new anchor.BN(400000); // Minimum 0.4 million expected
 
@@ -278,17 +345,36 @@ describe('AMM Tests', () => {
           .swap(amountIn, minAmountOut)
           .accounts({
             user: user.publicKey,
-            inputToken: userTokenA.address,
-            outputToken: userTokenB.address,
-            pool: poolPda,
-            poolTokenA: poolTokenA,
-            poolTokenB: poolTokenB,
+            userTokenA: userTokenA.address,
+            userTokenB: userTokenB.address,
+            tokenAVault: poolTokenA,
+            tokenBVault: poolTokenB,
             tokenProgram: TOKEN_PROGRAM_ID,
+            tokenAMint: tokenA,
+            tokenBMint: tokenB,
           })
           .signers([user])
           .rpc();
 
         console.log('Swap TokenA -> TokenB successful, tx:', tx);
+        
+        // ✅ Verify reserves updated
+        const poolAfter = await program.account.ammPool.fetch(poolPda);
+        console.log('Pool After Swap - A:', poolAfter.reserveA, 'B:', poolAfter.reserveB);
+        
+        // Reserve A should increase by amount_in
+        assert.equal(
+          poolAfter.reserveA.toNumber(), 
+          reserveABefore.toNumber() + amountIn.toNumber(),
+          'Reserve A should increase by amount_in'
+        );
+        
+        // Reserve B should decrease (by output amount)
+        assert(
+          poolAfter.reserveB.toNumber() < reserveBBefore.toNumber(),
+          'Reserve B should decrease'
+        );
+        
       } catch (e) {
         console.error('Swap error:', e);
         throw e;
@@ -330,6 +416,12 @@ describe('AMM Tests', () => {
         10000000 // 10 million
       );
 
+      // Get pool state before swap
+      const poolBefore = await program.account.ammPool.fetch(poolPda);
+      const reserveABefore = poolBefore.reserveA;
+      const reserveBBefore = poolBefore.reserveB;
+      console.log('Pool Before Swap - A:', reserveABefore, 'B:', reserveBBefore);
+
       const amountIn = new anchor.BN(1000000); // 1 million
       const minAmountOut = new anchor.BN(1800000); // Minimum 1.8 million expected
 
@@ -338,17 +430,36 @@ describe('AMM Tests', () => {
           .swap(amountIn, minAmountOut)
           .accounts({
             user: user.publicKey,
-            inputToken: userTokenB.address,
-            outputToken: userTokenA.address,
-            pool: poolPda,
-            poolTokenA: poolTokenA,
-            poolTokenB: poolTokenB,
+            userTokenA: userTokenA.address,
+            userTokenB: userTokenB.address,
+            tokenAVault: poolTokenA,
+            tokenBVault: poolTokenB,
             tokenProgram: TOKEN_PROGRAM_ID,
+            tokenAMint: tokenA,
+            tokenBMint: tokenB,
           })
           .signers([user])
           .rpc();
 
         console.log('Swap TokenB -> TokenA successful, tx:', tx);
+        
+        // ✅ Verify reserves updated
+        const poolAfter = await program.account.ammPool.fetch(poolPda);
+        console.log('Pool After Swap - A:', poolAfter.reserveA, 'B:', poolAfter.reserveB);
+        
+        // Reserve B should increase by amount_in
+        assert.equal(
+          poolAfter.reserveB.toNumber(), 
+          reserveBBefore.toNumber() + amountIn.toNumber(),
+          'Reserve B should increase by amount_in'
+        );
+        
+        // Reserve A should decrease
+        assert(
+          poolAfter.reserveA.toNumber() < reserveABefore.toNumber(),
+          'Reserve A should decrease'
+        );
+        
       } catch (e) {
         console.error('Swap error:', e);
         throw e;
@@ -357,38 +468,65 @@ describe('AMM Tests', () => {
   });
 
   describe('Remove Liquidity', () => {
-    it('Remove liquidity', async () => {
-      // Get pool info to calculate LP tokens to burn
+    it('Remove liquidity and verify LP tokens burned', async () => {
+      // Get pool info
       const poolAccount = await program.account.ammPool.fetch(poolPda);
-      const lpSupply = poolAccount.lpSupply;
+      const lpSupply = poolAccount.lpTokenSupply;
       const reserveA = poolAccount.reserveA;
       const reserveB = poolAccount.reserveB;
-
+      
+      // Get current LP balance
+      const lpBalanceBefore = await getAccount(provider.connection, authorityLpToken.address);
+      console.log('LP Supply:', lpSupply.toString());
+      console.log('LP Balance Before:', lpBalanceBefore.amount.toString());
+      
       // Burn 10% of LP tokens
-      const lpToBurn = lpSupply.div(new anchor.BN(10));
-
-      console.log(`Burning ${lpToBurn.toString()} LP tokens`);
-      console.log(`Expected return: ${reserveA.div(new anchor.BN(10)).toString()} TokenA, ${reserveB.div(new anchor.BN(10)).toString()} TokenB`);
+      const lpToBurn = new anchor.BN(lpSupply.toNumber() / 10);
+      console.log('LP To Burn:', lpToBurn.toString());
 
       try {
         await program.methods
           .removeLiquidity(lpToBurn)
           .accounts({
-            authority: authority.publicKey,
-            tokenA: tokenA,
-            tokenB: tokenB,
-            pool: poolPda,
-            poolTokenA: poolTokenA,
-            poolTokenB: poolTokenB,
-            poolLpToken: poolLpToken,
-            authorityTokenA: authorityTokenA.address,
-            authorityTokenB: authorityTokenB.address,
+            provider: authority.publicKey,
+            providerTokenA: authorityTokenA.address,
+            providerTokenB: authorityTokenB.address,
+            providerLpToken: authorityLpToken.address,
+            tokenAVault: poolTokenA,
+            tokenBVault: poolTokenB,
+            lpTokenMint: lpMint,
             tokenProgram: TOKEN_PROGRAM_ID,
+            tokenAMint: tokenA,
+            tokenBMint: tokenB,
           })
           .signers([authority])
           .rpc();
 
         console.log('Liquidity removed successfully');
+        
+        // ✅ Verify LP tokens were burned
+        const lpBalanceAfter = await getAccount(provider.connection, authorityLpToken.address);
+        console.log('LP Balance After:', lpBalanceAfter.amount.toString());
+        
+        assert.equal(
+          lpBalanceAfter.amount,
+          lpBalanceBefore.amount - lpToBurn.toNumber(),
+          'LP tokens should be burned'
+        );
+        
+        // Verify reserves decreased proportionally
+        const poolAfter = await program.account.ammPool.fetch(poolPda);
+        console.log('Reserve A After:', poolAfter.reserveA.toString());
+        console.log('Reserve B After:', poolAfter.reserveB.toString());
+        console.log('LP Supply After:', poolAfter.lpTokenSupply.toString());
+        
+        // ✅ Verify LP supply decreased
+        assert.equal(
+          poolAfter.lpTokenSupply.toNumber(),
+          lpSupply.toNumber() - lpToBurn.toNumber(),
+          'LP supply should decrease'
+        );
+        
       } catch (e) {
         console.error('Remove liquidity error:', e);
         throw e;
@@ -426,12 +564,13 @@ describe('AMM Tests', () => {
           .swap(new anchor.BN(0), new anchor.BN(1))
           .accounts({
             user: user.publicKey,
-            inputToken: userTokenA.address,
-            outputToken: userTokenB.address,
-            pool: poolPda,
-            poolTokenA: poolTokenA,
-            poolTokenB: poolTokenB,
+            userTokenA: userTokenA.address,
+            userTokenB: userTokenB.address,
+            tokenAVault: poolTokenA,
+            tokenBVault: poolTokenB,
             tokenProgram: TOKEN_PROGRAM_ID,
+            tokenAMint: tokenA,
+            tokenBMint: tokenB,
           })
           .signers([user])
           .rpc();
@@ -481,12 +620,13 @@ describe('AMM Tests', () => {
           .swap(new anchor.BN(1000000), new anchor.BN(999999999))
           .accounts({
             user: user.publicKey,
-            inputToken: userTokenA.address,
-            outputToken: userTokenB.address,
-            pool: poolPda,
-            poolTokenA: poolTokenA,
-            poolTokenB: poolTokenB,
+            userTokenA: userTokenA.address,
+            userTokenB: userTokenB.address,
+            tokenAVault: poolTokenA,
+            tokenBVault: poolTokenB,
             tokenProgram: TOKEN_PROGRAM_ID,
+            tokenAMint: tokenA,
+            tokenBMint: tokenB,
           })
           .signers([user])
           .rpc();

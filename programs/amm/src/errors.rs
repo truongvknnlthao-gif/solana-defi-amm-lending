@@ -12,4 +12,6 @@ pub enum ErrorCode {
     ZeroAmountInput = 3,
     #[msg("Insufficient balance")]
     InsufficientBalance = 4,
+    #[msg("Math operation overflow")]
+    MathOverflow = 5,
 }

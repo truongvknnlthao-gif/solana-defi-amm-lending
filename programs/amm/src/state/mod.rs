@@ -9,6 +9,7 @@ pub struct AmmPool {
     pub token_b_mint: Pubkey,
     pub token_a_vault: Pubkey,
     pub token_b_vault: Pubkey,
+    pub lp_token_mint: Pubkey,  // ✅ New: LP Token Mint address
     pub lp_token_supply: u64,
     pub reserve_a: u64,
     pub reserve_b: u64,
@@ -16,7 +17,7 @@ pub struct AmmPool {
 
 impl AmmPool {
     pub fn space() -> usize {
-        8 + 32 + 32 + 8 + 8 + 8 + 8 + 8
+        8 + 32 + 32 + 8 + 8 + 8 + 8 + 32 + 8 + 8 + 8 // ✅ Updated space calculation
     }
 }
 

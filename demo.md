@@ -30,8 +30,16 @@ https://github.com/truongvknnlthao-gif/solana-defi-amm-lending
 ## 🎬 Demo 演示
 
 ### 演示链接
-- 🎥 视频演示：待上传
+- 🎥 视频演示：[demo.mp4](./video/demo.mp4) (10MB, 约1分钟)
 - 🌐 在线 Demo：本地测试网 (localhost:3000)
+
+### 视频内容
+- 首页介绍 (15秒)
+- Swap 功能演示 (15秒)
+- Lending 功能演示 (15秒)
+- GitHub 仓库展示 (10秒)
+
+*注：视频已录制并包含在项目中。提交前请上传到 YouTube/B站 以获得永久链接。*
 
 ### 功能截图
 

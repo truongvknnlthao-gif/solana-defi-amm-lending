@@ -37,8 +37,8 @@
 ### 项目目标
 
 创建一个组合型 DeFi 协议，包含：
-1. **AMM 模块** - 自动做市商（当前完成）
-2. **Lending 模块** - 借贷协议（待修复）
+1. **AMM 模块** - 自动做市商 ✅ 已完成
+2. **Lending 模块** - 借贷协议 ✅ 已完成（简化版）
 
 ### 为什么选择 AMM + Lending？
 
@@ -769,6 +769,36 @@ Error: exceeded the maximal program log stack size
 
 ---
 
+## 📊 提交历史（按功能模块）
+
+### AMM 模块提交记录
+
+| 提交 | 描述 |
+|------|------|
+| [`27ac2fb`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/27ac2fb) | feat: complete AMM module implementation - Fix swap reserves, add LP Token, remove_liquidity |
+| [`78667f3`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/78667f3) | chore: update environment to Anchor 0.32.1 + Solana 4.0.0 |
+| [`c5e8925`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/c5e8925) | docs: 更新 README 添加文档链接 |
+| [`8f7db57`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/8f7db57) | docs: 添加完整开发指南 DEVELOPMENT.md |
+| [`c6e4d7c`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/c6e4d7c) | feat: AMM 模块构建成功 |
+| [`4b30063`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/4b30063) | feat: 清理临时文件 |
+| [`5245b16`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/5245b16) | feat: 初始化项目结构 - AMM + Lending DeFi Protocol |
+
+### Lending 模块提交记录
+
+| 提交 | 描述 |
+|------|------|
+| [`8395aca`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/8395aca) | feat: implement simplified Lending module - LendingPool, Obligation, deposit/borrow/repay |
+
+### Git 分支策略
+
+```
+main (生产就绪)
+├── feature/amm          → 已合并 ⌘
+└── feature/lending     → 已合并 ⌘
+```
+
+---
+
 ## 🏆 毕业要求
 
 ### 毕业条件 (满足其一)
@@ -782,7 +812,9 @@ Error: exceeded the maximal program log stack size
 | 要求 | 状态 |
 |------|------|
 | Task 1-6 完成 | ✅ 已完成 |
-| 毕业设计 | 🔄 进行中 |
+| AMM 模块 | ✅ 已完成 |
+| Lending 模块 | ✅ 已完成（简化版） |
+| 毕业设计 | 🔄 就绪 |
 | 黑客松提交 | ⏳ 待提交 |
 
 ---
@@ -800,7 +832,7 @@ Error: exceeded the maximal program log stack size
 - ✅ Rust 1.95.0-nightly (统一)
 - ✅ Solana CLI 4.0.0 Agave (统一)
 - ✅ Anchor 0.32.1 (统一)
-- ⚠️ Lending 模块禁用（帧空间问题待解决）
+- ✅ **Lending 模块已完成**（简化版，无清算）
 
 ### 2026-02-07
 

@@ -249,6 +249,25 @@ anchor test tests/lending.ts
 - [ ] Devnet 部署 (等待空投)
 - [x] README 完善
 
+### 🚀 待部署 (需要 Devnet SOL)
+
+```bash
+# 服务器执行
+ssh solana-dev
+cd /data/workspace/solana-defi-amm-lending
+
+# 1. 领取空投 (需要 2+ SOL)
+solana airdrop 2
+
+# 2. 配置 devnet
+solana config set --url devnet
+
+# 3. 部署程序
+anchor deploy --provider.cluster devnet
+
+# 4. 更新 Program IDs
+```
+
 ---
 
 ## 📚 参考资料

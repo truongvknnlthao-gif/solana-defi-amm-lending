@@ -7,6 +7,14 @@
 
 ---
 
+## 📚 文档
+
+- **[README.md](./README.md)** - 项目概述和快速开始
+- **[DEVELOPMENT.md](./DEVELOPMENT.md)** - 完整开发指南（必读）
+- **[MILESTONE.md](./MILESTONE.md)** - 4 周开发计划
+
+---
+
 ## 📊 项目状态
 
 ### ✅ 已完成

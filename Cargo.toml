@@ -1,6 +1,6 @@
 [workspace]
 members = ["programs/amm"]
-exclude = ["programs/lending_disabled"]
+exclude = ["programs/lending_disabled", "programs/lending"]
 resolver = "2"
 
 [profile.release]

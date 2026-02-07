@@ -776,6 +776,8 @@ Error: exceeded the maximal program log stack size
 | 提交 | 描述 |
 |------|------|
 | [`27ac2fb`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/27ac2fb) | feat: complete AMM module implementation - Fix swap reserves, add LP Token, remove_liquidity |
+| [`8395aca`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/8395aca) | feat: implement simplified Lending module |
+| [`7adef41`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/7adef41) | docs: update DEVELOPMENT.md with module-wise commit history |
 | [`78667f3`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/78667f3) | chore: update environment to Anchor 0.32.1 + Solana 4.0.0 |
 | [`c5e8925`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/c5e8925) | docs: 更新 README 添加文档链接 |
 | [`8f7db57`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/8f7db57) | docs: 添加完整开发指南 DEVELOPMENT.md |
@@ -783,11 +785,12 @@ Error: exceeded the maximal program log stack size
 | [`4b30063`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/4b30063) | feat: 清理临时文件 |
 | [`5245b16`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/5245b16) | feat: 初始化项目结构 - AMM + Lending DeFi Protocol |
 
-### Lending 模块提交记录
+### 最新 Program IDs (Devnet)
 
-| 提交 | 描述 |
-|------|------|
-| [`8395aca`](https://github.com/truongvknnlthao-gif/solana-defi-amm-lending/commit/8395aca) | feat: implement simplified Lending module - LendingPool, Obligation, deposit/borrow/repay |
+| 模块 | Program ID | 说明 |
+|------|-----------|------|
+| AMM | `CZaKkKoLPHzcRXtm5q5X8YQNpr15ocASwgvW6krjFZex` | 已部署 |
+| Lending | `8oCbnRgZnWRd1ctY3otZvwGqJpr8fG7b2atYFxqUAjxC` | 已部署 |
 
 ### Git 分支策略
 

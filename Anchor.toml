@@ -10,7 +10,7 @@ cluster = "Localnet"
 wallet = "~/.config/solana/id.json"
 
 [programs]
-devnet = { amm = "4oinKHPtdGALR4aVCtns8KqmZ5sqfDa3y9esqe6zYPi4", lending = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS" }
+devnet = { amm = "CZaKkKoLPHzcRXtm5q5X8YQNpr15ocASwgvW6krjFZex", lending = "8oCbnRgZnWRd1ctY3otZvwGqJpr8fG7b2atYFxqUAjxC" }
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
